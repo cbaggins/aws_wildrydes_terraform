@@ -9,23 +9,13 @@ resource "random_id" "name"	{
 	byte_length = "4"
 }
 
-#create tf for uploading static files to bucket
-resource "null_resource" "createbucketuploadfile" {
-  depends_on = [null_resource.moveconfigjs]
-  provisioner "local-exec" {
-    command     = "./scripts/CreateBucketUploadFile.ps1 -Bucket ${aws_s3_bucket.bucket.id}"
-    interpreter = ["Powershell", "-command"]
-    working_dir = "./"
-  }
-}
-
 #needed to get current name of region for config.js
 data "aws_region" "current" {}
 
 #update /js/config.js with correct values
 ##Terraform has issues with escaping single quotes so its easier to use a script instead.
 resource "null_resource" "configjsvalues" {
-  depends_on    = ["aws_cognito_user_pool.pool","aws_cognito_user_pool_client.client","null_resource.moveconfigjs","aws_api_gateway_deployment.gateway"]
+  depends_on    = ["aws_cognito_user_pool.pool","aws_cognito_user_pool_client.client","aws_api_gateway_deployment.gateway"]
   provisioner "local-exec" {
     command     = "./scripts/replaceconfigfilevalues.ps1 -userpoolid ${aws_cognito_user_pool.pool.id} -userpoolclientid ${aws_cognito_user_pool_client.client.id} -region ${data.aws_region.current.name} -apigateway ${aws_api_gateway_deployment.gateway.invoke_url}"
     interpreter = ["Powershell", "-command"]

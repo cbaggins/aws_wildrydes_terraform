@@ -5,4 +5,5 @@ Param(
   [String]$apigateway
 )
 
-(Get-Content ./upload/config.js).Replace("userPoolId: ''","userPoolId: '$($userpoolid)'").Replace("userPoolClientId: ''","userPoolClientId: '$($userpoolclientid)'").Replace("region: ''","region: '$region'").Replace("invokeUrl: ''","invokeUrl: '$apigateway'") | Set-Content ./upload/config.js
+$msg = Get-Content ./upload/config.js 
+$msg -Replace ("userPoolId: '*.*'","userPoolId: '$($userpoolid)'") -replace ("userPoolClientId: '*.*'","userPoolClientId: '$($userpoolclientid)'") -Replace("region: '*.*'","region: '$region'") -Replace("invokeUrl: '*.*'","invokeUrl: '$apigateway'") | Set-Content ./upload/config.js

@@ -1,10 +1,5 @@
 # Local .terraform directories
 **/.terraform/*
-**/upload/*
-
-# Special Files
-master.zip
-uploadbucketfiles.tf
 
 # .tfstate files
 *.tfstate
